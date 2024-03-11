@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新視界資料庫搜尋</title>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+
+
+    <script>
+      //PREVENT FORMS FROM SUBMITTING / PREVENT DEFAULT BEHAVIOUR
+      function preventFormSubmit() {
+            var forms = document.querySelectorAll('form');
+            for (var i = 0; i < forms.length; i++) {
+              forms[i].addEventListener('submit', function(event) {
+              event.preventDefault();
+              });
+            }
+          }
+          window.addEventListener("load", preventFormSubmit, true); 
+
+
+        // 顯示表格內容
+
+        function createTable(dataArray) {
+            if (dataArray && dataArray !== undefined && dataArray.length != 0) {
+
+                var result = "<table class='table table-sm table-striped' id='dtable' style='font-size:20px'>"+
+                           "<thead style='white-space: nowrap'>"+
+                             "<tr>"+
+                              "<th scope='col'>資料夾名稱</th>"+
+                              "<th scope='col'>完成影片連結</th>"+
+                              "<th scope='col'>雲端位置</th>"+
+                              "<th scope='col'>資料夾分類</th>"+
+                              "<th scope='col'>執行</th>"+
+                              "<th scope='col'>剪接</th>"+
+                              "<th scope='col'>攝影</th>"+
+                              "<th scope='col'>拍攝地點</th>"+
+                              "<th scope='col'>畫面備註</th>"+
+                            "</tr>"+
+                          "</thead>";
+              for(var i=0; i<dataArray.length; i++) {
+                  result += "<tr>";
+                  for (var j = 0; j < dataArray[i].length; j++) {
+                      result += "<td>"+dataArray[i][j]+"</td>";
+                  }
+                  result += "</tr>";
+              }
+              result += "</table>";
+              var div = document.getElementById('search-results');
+              div.innerHTML = result;
+
+            } else {
+                var div = document.getElementById('search-results');
+                div.innerHTML = "試試其他關鍵字!";
+            }
+        }
+
+        // 連結google script並顯示
+        function handleFormSubmit(formObject) {
+            google.script.run.withSuccessHandler(createTable).submitForm(formObject);
+            document.getElementById("search-form").reset();
+          }
+
+    </script>
+
+</head>
+<body>
+    <br>
+    <br>
+    <h2 style="text-align: center;">新視界資料庫搜尋</h2>
+    <br>
+     <div class="container">
+        <div class="row">
+            <div class="col">
+                <form id="search-form" class="form-inline" onsubmit="handleFormSubmit (this) ">
+                   <input style="width:80%;" type="text" id="searchtext" name="searchtext" placeholder="關鍵字">
+                    <button type="submit" class="btn btn-primary">搜尋</button>
+                </form>
+            </div>
+        </div>
+
+            <!--表格要顯示的地方-->
+        <div class="row">
+
+            <div id="search-results" class="table-reponsive">
+
+
+            </div>
+
+        </div>
+     </div>
+
+     
+</body>
+</html>
